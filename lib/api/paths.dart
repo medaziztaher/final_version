@@ -1,6 +1,6 @@
 //url Paths :
-//const url = 'https://medilink-api.onrender.com';
-const url = 'http://10.0.2.2:5000';
+const url = 'https://medilink-api.onrender.com';
+//const url = 'http://10.0.2.2:5000';
 
 //Apis paths :
 const authUri = "$url/api/auth";
