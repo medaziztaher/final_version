@@ -4,7 +4,7 @@ class Reminder {
   String id;
   String name;
   String? instructions;
-  String dosage;
+  int dosage;
   String type;
   bool done;
   TimeOfDay notificationTime;
@@ -22,7 +22,7 @@ class Reminder {
     int hour = json['firstReminderTime']['hour'];
     int minute = json['firstReminderTime']['minute'];
     return Reminder(
-      done: json['done'],
+      done: json['firstReminderTime']['done'],
       dosage: json['dosage'],
       id: json['_id'],
       name: json['name'],

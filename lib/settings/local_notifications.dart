@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 class NotificationService {
@@ -19,21 +20,35 @@ class NotificationService {
 
     var initializationSettings = InitializationSettings(
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
-    await notificationsPlugin.initialize(initializationSettings,
-        onDidReceiveNotificationResponse:
-            (NotificationResponse notificationResponse) async {
-      // Handle notification interaction here
-      if (notificationResponse.payload != null) {
-        // Do something based on the payload
-        print('Notification payload: ${notificationResponse.payload}');
-      }
-    });
+
+    await notificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse:
+          (NotificationResponse notificationResponse) async {
+        print('Notification received!');
+        String title = notificationResponse.payload!;
+        switch (title) {
+          case 'Notification 1':
+            // Do something for notification 1
+            break;
+          case 'Notification 2':
+            // Do something for notification 2
+            break;
+          // Add more cases for other notification titles
+        }
+      },
+    );
   }
 
   notificationDetails() {
     return const NotificationDetails(
-        android: AndroidNotificationDetails('channelId', 'channelName',
-            importance: Importance.max),
+        android: AndroidNotificationDetails(
+          'channelId',
+          'channelName',
+          importance: Importance.max,
+          playSound: true,
+          sound: RawResourceAndroidNotificationSound('notification'),
+        ),
         iOS: DarwinNotificationDetails());
   }
 
@@ -43,37 +58,35 @@ class NotificationService {
         .show(id, title, body, await notificationDetails(), payload: payload);
   }
 
-  Future scheduleDailyNotifications({
-    int id = 0,
-    String? title,
-    String? body,
-    String? payLoad,
-    required TimeOfDay notificationTime,
-    required int numberOfDays,
-  }) async {
+  Future scheduleNotification(
+      {int id = 0,
+      String? title,
+      String? body,
+      String? payLoad,
+      required TimeOfDay notificationTime}) async {
     final now = tz.TZDateTime.now(tz.local);
-    final notificationDetail = await notificationDetails();
-
-    for (int day = 0; day < numberOfDays; day++) {
-      final scheduledNotificationDateTime = tz.TZDateTime(
-        tz.local,
-        now.year,
-        now.month,
-        now.day + day,
-        notificationTime.hour,
-        notificationTime.minute,
-      );
-
-      await notificationsPlugin.zonedSchedule(
-        id + day, // Different ID for each day's notification
+    print(tz.local);
+    final scheduledNotificationDateTime = tz.TZDateTime(
+      tz.local,
+      now.year,
+      now.month,
+      now.day,
+      notificationTime.hour,
+      notificationTime.minute,
+    );
+    print(now);
+    print(scheduledNotificationDateTime);
+    return notificationsPlugin.zonedSchedule(
+        id,
         title,
         body,
-        scheduledNotificationDateTime,
-        notificationDetail,
+        tz.TZDateTime.from(
+          scheduledNotificationDateTime,
+          tz.local,
+        ),
+        await notificationDetails(),
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
-      );
-    }
+            UILocalNotificationDateInterpretation.absoluteTime);
   }
 }

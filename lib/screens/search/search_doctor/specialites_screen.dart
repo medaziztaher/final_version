@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:medilink_app/components/custom_app_bar.dart';
 import 'package:medilink_app/components/custom_search_bar.dart';
 import 'package:medilink_app/components/custom_sepeciality_card.dart';
-import 'package:medilink_app/models/specialite.dart';
 import 'package:medilink_app/navigation/patient/patient_navigation_controller.dart';
 import 'package:medilink_app/utils/constants.dart';
 
@@ -50,7 +49,7 @@ class SpecialitesScreen extends StatelessWidget {
               spacing: 22,
               runSpacing: 22.0,
               children: List.generate(
-                specialiste.length,
+                specialistes.length,
                 (index) => SpecialityCard(
                   index: index,
                   item: specialistes[index],

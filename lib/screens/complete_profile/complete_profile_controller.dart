@@ -29,20 +29,26 @@ class CompleteProfileController extends GetxController {
   late String gender = 'Male';
   late String etatcivil = 'Single';
   late String specialite = "";
-  late Future<String?> type;
+  late String? type;
   final errorMessage = ''.obs;
   NetworkHandler networkHandler = NetworkHandler();
   XFile? imageFile;
-
   ImagePicker picker = ImagePicker();
   List<Options>? specialites = [];
   List<XFile?> imageFiles = List<XFile?>.filled(4, null);
+  late String? globalRole;
 
-@override
-void onInit(){
-  type = getUserType();
-  super.onInit();
-}
+  @override
+  void onInit() {
+    _initialize();
+    super.onInit();
+  }
+
+  void _initialize() async {
+    type = await getUserType();
+    globalRole = await getUserRole();
+    update();
+  }
 
   @override
   void dispose() {
@@ -81,10 +87,8 @@ void onInit(){
 
   Future<void> completeProfile() async {
     isLoading.value = true;
-    var error;
     removeError("kerror1".tr);
     removeError("kerror2".tr);
-    removeError(error);
     try {
       if (formKeyCompleteProfile.currentState!.validate()) {
         Map<String, String> data = {
@@ -101,10 +105,12 @@ void onInit(){
         };
         final response =
             await networkHandler.put("$userUri/complete-profile", data);
+        print(response.statusCode);
+        print(response.body);
         if (response.statusCode == 200 || response.statusCode == 201) {
           if (imageFile != null &&
               imageFile!.path.isNotEmpty &&
-              (globalRole == 'Patient' || globalType == 'Doctor')) {
+              (globalRole == 'Patient' || type == 'Doctor')) {
             print("path : ${imageFile!.path}");
             final imageResponse = await networkHandler.patchImage(
                 "$fileUri/profile-picture", imageFile!.path);
@@ -122,12 +128,12 @@ void onInit(){
               print(" image path status code : ${imageResponse.statusCode}");
             }
           } else if (globalRole == 'HealthcareProvider' &&
-              globalType != 'Doctor') {
+              type != 'Doctor') {
             for (int i = 0; i < imageFiles.length; i++) {
               print(imageFiles);
               XFile? imageFile = imageFiles[i];
               if (imageFile != null && imageFile.path.isNotEmpty) {
-                print("${imageFile.path}");
+                print(imageFile.path);
                 final imageResponse = await networkHandler.patchImage(
                     buildingpicsPath, imageFile.path);
                 if (imageResponse.statusCode == 200) {
@@ -141,8 +147,8 @@ void onInit(){
             }
           }
         } else {
-          error = json.decode(response.body)['message'];
-          addError(error);
+          final message = json.decode(response.body)['message'];
+          addError(message);
         }
       }
     } on SocketException {

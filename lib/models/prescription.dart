@@ -5,29 +5,36 @@ class Prescription {
   String patient;
   String? provider;
   String medication;
-  String dosage;
-  String frequency;
+  int dosage;
+  String type;
+  int frequency;
   int? duration;
   DateTime startDate;
   DateTime? endDate;
-  List<String>? reminder;
+  String? instructions;
+  List<PrescriptionReminder> reminder;
 
   Prescription({
     required this.id,
     required this.patient,
     required this.medication,
     required this.dosage,
+    required this.type,
     required this.frequency,
     this.duration,
     this.endDate,
     this.provider,
-    this.reminder,
+    this.instructions,
     required this.startDate,
+    required this.reminder,
   });
 
   factory Prescription.fromJson(Map<String, dynamic> json) {
-    List<String>? reminder =
-        json['reminder'] != null ? List<String>.from(json['reminder']) : [];
+    List<dynamic> reminderList = json['reminder'] ?? [];
+    List<PrescriptionReminder> reminders = reminderList
+        .map((reminderJson) => PrescriptionReminder.fromJson(reminderJson))
+        .toList();
+
     return Prescription(
       dosage: json['dosage'],
       frequency: json['frequency'],
@@ -35,11 +42,35 @@ class Prescription {
       medication: json['medication'],
       patient: json['patient'],
       provider: json['provider'] as String?,
+      type: json['type'],
       duration: json['duration'] as int?,
-      endDate:
-          json['startDate'] != null ? DateTime.parse(json['endDate']) : null,
+      endDate: json['endDate'] != null ? DateTime.parse(json['endDate']) : null,
       startDate: DateTime.parse(json['startDate']),
-      reminder: reminder,
+      instructions: json['instructions'],
+      reminder: reminders,
+    );
+  }
+}
+
+class PrescriptionReminder {
+  String uuid;
+  int hour;
+  int minute;
+  bool done;
+
+  PrescriptionReminder({
+    required this.uuid,
+    required this.hour,
+    required this.minute,
+    required this.done,
+  });
+
+  factory PrescriptionReminder.fromJson(Map<String, dynamic> json) {
+    return PrescriptionReminder(
+      uuid: json['uuid'],
+      hour: json['hour'],
+      minute: json['minute'],
+      done: json['done'],
     );
   }
 }

@@ -30,7 +30,6 @@ class PatientScreens extends StatelessWidget {
       ),
       const ChatNavigations(),
       const ProfileNavigations(),
-      // ProfileScreen(),
     ];
 
     PatientNavigationController navigationController =

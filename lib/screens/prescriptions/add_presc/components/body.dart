@@ -11,7 +11,8 @@ import 'package:medilink_app/screens/prescriptions/add_presc/add_prescription_co
 import 'package:medilink_app/utils/constants.dart';
 
 class Body extends StatefulWidget {
-  const Body({super.key, required this.user, required this.userId});
+  const Body({Key? key, required this.user, required this.userId})
+      : super(key: key);
   final User user;
   final String userId;
 
@@ -32,32 +33,27 @@ class _BodyState extends State<Body> {
 
     return SafeArea(
       child: SingleChildScrollView(
-        padding: const EdgeInsets.only(
-          top: defaultScreenPadding,
-          bottom: defaultScreenPadding,
+        padding: const EdgeInsets.symmetric(
+          horizontal: defaultScreenPadding,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: defaultScreenPadding,
-              ),
+              padding: const EdgeInsets.only(bottom: defaultScreenPadding),
               // Custom app bar
               child: CustomAppBar(
-                  title: "Add new medication",
-                  onBack: () {
-                    patientNavigationController.updateCurrentHomePage(
-                        patientNavigationController.previousHomePage);
-                  },
-                  withoutNotifIcon: true),
+                title: "Add new medication",
+                onBack: () {
+                  patientNavigationController.updateCurrentHomePage(
+                      patientNavigationController.previousHomePage);
+                },
+                withoutNotifIcon: true,
+              ),
             ),
-            const SizedBox(
-              height: 26,
-            ),
+            const SizedBox(height: 26),
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: defaultScreenPadding),
+              padding: const EdgeInsets.only(bottom: defaultScreenPadding),
               child: GetBuilder<AddPrescriptionController>(
                   init: AddPrescriptionController(user: widget.user),
                   builder: (controller) {
@@ -66,9 +62,7 @@ class _BodyState extends State<Body> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(
-                            height: 26,
-                          ),
+                          const SizedBox(height: 26),
                           Text(
                             "Name of medication",
                             style: GoogleFonts.nunitoSans(
@@ -90,56 +84,48 @@ class _BodyState extends State<Body> {
                               borderRadius:
                                   BorderRadius.all(Radius.circular(16)),
                             ),
-                            child: Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 12),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Expanded(
-                                      child: TextFormField(
-                                        controller:
-                                            controller.medicamentController,
-                                        onSaved: (newValue) => controller
-                                            .medicamentController
-                                            .text = newValue!,
-                                        style: GoogleFonts.nunitoSans(
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Expanded(
+                                  child: TextFormField(
+                                    controller: controller.medicamentController,
+                                    onSaved: (newValue) => controller
+                                        .medicamentController.text = newValue!,
+                                    style: GoogleFonts.nunitoSans(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 16,
+                                      color: typingColor.withOpacity(0.8),
+                                    ),
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          borderSide: BorderSide.none,
+                                        ),
+                                        hintText: "Enter Medication's Name",
+                                        hintStyle: GoogleFonts.nunitoSans(
                                           fontWeight: FontWeight.w700,
                                           fontSize: 16,
                                           color: typingColor.withOpacity(0.8),
-                                        ),
-                                        decoration: InputDecoration(
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                              borderSide: BorderSide.none,
-                                            ),
-                                            hintText: "Enter Medication's Name",
-                                            hintStyle: GoogleFonts.nunitoSans(
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: 16,
-                                              color:
-                                                  typingColor.withOpacity(0.8),
-                                            )),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 2,
-                                      height: 36,
-                                      child: Container(
-                                        color: Colors.grey[300],
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 12,
-                                    ),
-                                    const ImageIcon(
-                                      AssetImage("assets/icons/scan.png"),
-                                      color: primaryColor,
-                                    ),
-                                  ],
+                                        )),
+                                  ),
                                 ),
-                              ),
+                                SizedBox(
+                                  width: 2,
+                                  height: 36,
+                                  child: Container(
+                                    color: Colors.grey[300],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 12,
+                                ),
+                                const ImageIcon(
+                                  AssetImage("assets/icons/scan.png"),
+                                  color: primaryColor,
+                                ),
+                              ],
                             ),
                           ),
                           const SizedBox(
@@ -234,67 +220,64 @@ class _BodyState extends State<Body> {
                               borderRadius:
                                   BorderRadius.all(Radius.circular(16)),
                             ),
-                            child: Expanded(
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const ImageIcon(
-                                    AssetImage("assets/icons/calendar-2.png"),
-                                    color: primaryColor,
-                                  ),
-                                  const SizedBox(
-                                    width: 30,
-                                  ),
-                                  Expanded(
-                                    child: DropdownButton<String>(
-                                      iconSize: 0.0,
-                                      value: controller.frequencyController
-                                          .toString(),
-                                      items: <String>[
-                                        '1',
-                                        '2',
-                                        '3',
-                                        '4',
-                                        '5',
-                                        '6',
-                                      ].map<DropdownMenuItem<String>>(
-                                          (String value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(
-                                            value,
-                                            style: GoogleFonts.nunitoSans(
-                                              fontSize: 16,
-                                              color: typingColor,
-                                              fontWeight: FontWeight.w700,
-                                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const ImageIcon(
+                                  AssetImage("assets/icons/calendar-2.png"),
+                                  color: primaryColor,
+                                ),
+                                const SizedBox(
+                                  width: 30,
+                                ),
+                                Expanded(
+                                  child: DropdownButton<String>(
+                                    iconSize: 0.0,
+                                    value: controller.frequencyController
+                                        .toString(),
+                                    items: <String>[
+                                      '1',
+                                      '2',
+                                      '3',
+                                      '4',
+                                      '5',
+                                      '6',
+                                    ].map<DropdownMenuItem<String>>(
+                                        (String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(
+                                          value,
+                                          style: GoogleFonts.nunitoSans(
+                                            fontSize: 16,
+                                            color: typingColor,
+                                            fontWeight: FontWeight.w700,
                                           ),
-                                        );
-                                      }).toList(),
-                                      // Step 5.
-                                      onChanged: (String? newValue) {
-                                        setState(() {
-                                          controller.frequencyController =
-                                              int.parse(newValue!);
-                                        });
-                                      },
-                                      underline: Container(),
-                                    ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                    // Step 5.
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        controller
+                                            .onChangedfrequency(newValue!);
+                                      });
+                                    },
+                                    underline: Container(),
                                   ),
-                                  Text(
-                                    "Times",
-                                    style: GoogleFonts.nunitoSans(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 16,
-                                        color: typingColor),
-                                  ),
-                                  const SizedBox(
-                                    width: 12,
-                                  ),
-                                ],
-                              ),
+                                ),
+                                Text(
+                                  "Times",
+                                  style: GoogleFonts.nunitoSans(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 16,
+                                      color: typingColor),
+                                ),
+                                const SizedBox(
+                                  width: 12,
+                                ),
+                              ],
                             ),
                           ),
                           const SizedBox(
@@ -319,8 +302,7 @@ class _BodyState extends State<Body> {
                                     DateFormat('yyyy-MM-dd');
                                 final String formattedDate =
                                     formatter.format(selectedDate);
-                                controller.dateDebutController.text =
-                                    formattedDate;
+                                controller.onChangeddatedebut(formattedDate);
                               }
                             },
                             child: Container(
@@ -382,8 +364,7 @@ class _BodyState extends State<Body> {
                                     DateFormat('yyyy-MM-dd');
                                 final String formattedDate =
                                     formatter.format(selectedDate);
-                                controller.dateFinController.text =
-                                    formattedDate;
+                                controller.onChangeddatefin(formattedDate);
                               }
                             },
                             child: Container(
@@ -395,130 +376,150 @@ class _BodyState extends State<Body> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(16)),
                               ),
-                              child: Expanded(
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    const ImageIcon(
-                                      AssetImage("assets/icons/calendar.png"),
-                                      color: primaryColor,
-                                    ),
-                                    const SizedBox(
-                                      width: 12,
-                                    ),
-                                    Expanded(
-                                      child: Text(
-                                        controller.dateFinController.text
-                                                .isNotEmpty
-                                            ? controller.dateFinController.text
-                                            : "Select Date",
-                                        style: GoogleFonts.nunitoSans(
-                                          fontSize: 16,
-                                          color: typingColor,
-                                          fontWeight: FontWeight.w700,
-                                        ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  const ImageIcon(
+                                    AssetImage("assets/icons/calendar.png"),
+                                    color: primaryColor,
+                                  ),
+                                  const SizedBox(
+                                    width: 12,
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      controller
+                                              .dateFinController.text.isNotEmpty
+                                          ? controller.dateFinController.text
+                                          : "Select Date",
+                                      style: GoogleFonts.nunitoSans(
+                                        fontSize: 16,
+                                        color: typingColor,
+                                        fontWeight: FontWeight.w700,
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
                           const SizedBox(
                             height: 26,
                           ),
-                          const TextFieldLabel(label: "Alarme"),
-                          const SizedBox(
-                            height: 12,
-                          ),
-                          SizedBox(
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: controller.reminders.length,
-                              scrollDirection: Axis.vertical,
-                              itemBuilder: (context, index) {
-                                TimeOfDay notification = controller.reminders[
-                                    index]; // Change 'final' to 'TimeOfDay'
-                                return Padding(
-                                  padding:
-                                      EdgeInsets.only(top: index == 0 ? 0 : 12),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: Container(
-                                          height: 60,
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 12),
-                                          decoration: const BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(16)),
-                                          ),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              const ImageIcon(
-                                                AssetImage(
-                                                    "assets/icons/bell-ring.png"),
-                                                color: primaryColor,
+                          if (controller.dateFinController.text.isNotEmpty && DateTime.parse(controller.dateFinController.text)
+                              .isAfter(DateTime.now())) ...[
+                            const TextFieldLabel(label: "Alarme"),
+                            const SizedBox(
+                              height: 12,
+                            ),
+                            SizedBox(
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: controller.frequencyController,
+                                scrollDirection: Axis.vertical,
+                                itemBuilder: (context, index) {
+                                  if (controller.reminders.isNotEmpty) {
+                                    TimeOfDay notification =
+                                        controller.reminders[index];
+
+                                    return Padding(
+                                      padding: EdgeInsets.only(
+                                          top: index == 0 ? 0 : 12),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Container(
+                                              height: 60,
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 12),
+                                              decoration: const BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(16)),
                                               ),
-                                              const SizedBox(width: 26),
-                                              Expanded(
-                                                child: Text(
-                                                  '${notification.hour}:${notification.minute}', // Display the time
-                                                  style: GoogleFonts.nunitoSans(
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.w800,
-                                                    color: typingColor,
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: [
+                                                  const ImageIcon(
+                                                    AssetImage(
+                                                        "assets/icons/bell-ring.png"),
+                                                    color: primaryColor,
+                                                  ),
+                                                  const SizedBox(width: 26),
+                                                  Expanded(
+                                                    child: Text(
+                                                      '${notification.hour}:${notification.minute.toString().padLeft(2, '0')}',
+                                                      style: GoogleFonts
+                                                          .nunitoSans(
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.w800,
+                                                        color: typingColor,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 12.0),
+                                          Expanded(
+                                            child: GestureDetector(
+                                              onTap: () async {
+                                                TimeOfDay? notificationTime =
+                                                    await showTimePicker(
+                                                  context: context,
+                                                  initialTime: notification,
+                                                  initialEntryMode:
+                                                      TimePickerEntryMode.dial,
+                                                );
+
+                                                if (notificationTime != null) {
+                                                  setState(() {
+                                                    notification =
+                                                        notificationTime;
+                                                    controller
+                                                            .reminders[index] =
+                                                        notification;
+                                                  });
+                                                }
+                                              },
+                                              child: Container(
+                                                height: 60,
+                                                width: 60,
+                                                decoration: const BoxDecoration(
+                                                  color: lightBlueColor,
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(12),
                                                   ),
                                                 ),
+                                                padding:
+                                                    const EdgeInsets.all(16),
+                                                child: const ImageIcon(
+                                                  AssetImage(
+                                                      "assets/icons/edit.png"),
+                                                  size: 20,
+                                                  color: primaryColor,
+                                                ),
                                               ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 12.0),
-                                      GestureDetector(
-                                        onTap: () async {
-                                          TimeOfDay? notificationTime =
-                                              await showTimePicker(
-                                            context: context,
-                                            initialTime: notification,
-                                            initialEntryMode:
-                                                TimePickerEntryMode.dial,
-                                          );
 
-                                          if (notificationTime != null) {
-                                            setState(() {
-                                              notification = notificationTime;
-                                              controller.reminders[index] =
-                                                  notification; // Update the reminder in the list
-                                            });
-                                          }
-                                        },
-                                        child: Container(
-                                          height: 60,
-                                          width: 60,
-                                          decoration: const BoxDecoration(
-                                            color: lightBlueColor,
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(12)),
+                                              // Other gesture detector properties...
+                                            ),
                                           ),
-                                          padding: const EdgeInsets.all(16),
-                                          child: const ImageIcon(
-                                            AssetImage("assets/icons/edit.png"),
-                                            size: 20,
-                                            color: primaryColor,
-                                          ),
-                                        ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                );
-                              },
+                                    );
+                                  } else {
+                                    return const SizedBox.shrink();
+                                  }
+                                },
+                              ),
                             ),
-                          ),
+                          ],
+
                           const SizedBox(
                             height: 26,
                           ),
@@ -563,9 +564,6 @@ class _BodyState extends State<Body> {
                                   controller.addPrescription();
                                 });
                           }),
-                          const SizedBox(
-                            height: 26,
-                          ),
                           //FormError(errors: controller.errors),
                         ],
                       ),

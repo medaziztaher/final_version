@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:medilink_app/models/emergency_contact.dart';
@@ -27,7 +28,10 @@ class Body extends StatelessWidget {
           itemCount: emergencyContacts.length,
           itemBuilder: (context, index) {
             final emergencyContact = emergencyContacts[index];
-            return emergencyCard(emergencyContact);
+            return Padding(
+              padding: EdgeInsets.all(10.w),
+              child: emergencyCard(emergencyContact),
+            );
           },
         );
       } else {
@@ -53,9 +57,10 @@ Row emergencyCard(EmergencyContact user) {
         width: 12,
       ),
       Column(
+        crossAxisAlignment:CrossAxisAlignment.start,
         children: [
           Text(
-            user.name,
+           "Name : ${user.name}" ,
             style: GoogleFonts.nunitoSans(
               color: typingColor,
               fontSize: 16,
@@ -63,7 +68,7 @@ Row emergencyCard(EmergencyContact user) {
             ),
           ),
           Text(
-            user.relationship,
+            "Relation : ${user.relationship}",
             style: GoogleFonts.nunitoSans(
               color: typingColor,
               fontSize: 16,
@@ -71,7 +76,7 @@ Row emergencyCard(EmergencyContact user) {
             ),
           ),
           Text(
-            user.phoneNumber,
+            "Phone Number : ${user.phoneNumber}",
             style: GoogleFonts.nunitoSans(
               color: typingColor,
               fontSize: 16,

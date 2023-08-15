@@ -6,6 +6,7 @@ import 'package:medilink_app/components/custom_search_bar.dart';
 import 'package:medilink_app/navigation/patient/patient_navigation_controller.dart';
 import 'package:medilink_app/utils/constants.dart';
 
+
 class SearchDoctorsScreen extends StatelessWidget {
   const SearchDoctorsScreen({super.key});
 

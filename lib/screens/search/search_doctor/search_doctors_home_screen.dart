@@ -5,11 +5,9 @@ import 'package:medilink_app/components/custom_doctor_card.dart';
 import 'package:medilink_app/components/custom_search_bar.dart';
 import 'package:medilink_app/components/custom_sepeciality_card.dart';
 import 'package:medilink_app/components/section_devider.dart';
-import 'package:medilink_app/models/specialite.dart';
 import 'package:medilink_app/navigation/patient/patient_navigation_controller.dart';
 import 'package:medilink_app/screens/notification/notification_screen.dart';
 import 'package:medilink_app/utils/constants.dart';
-
 
 class SearchDoctorsHomeScreen extends StatefulWidget {
   const SearchDoctorsHomeScreen({super.key});
@@ -49,7 +47,7 @@ class _SearchDoctorsHomeScreenState extends State<SearchDoctorsHomeScreen> {
               ),
               InkWell(
                 onTap: () {
-                  Get.to(const NotificationScreen());
+                  Get.to(NotificationScreen());
                 },
                 child: Container(
                   width: 42,
@@ -100,7 +98,7 @@ class _SearchDoctorsHomeScreenState extends State<SearchDoctorsHomeScreen> {
           SizedBox(
             height: 100,
             child: ListView.builder(
-              itemCount: specialiste.length,
+              itemCount: specialistes.length,
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
                 final item = specialistes[index];

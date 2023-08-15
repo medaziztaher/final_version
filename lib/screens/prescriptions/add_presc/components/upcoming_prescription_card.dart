@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:medilink_app/models/reminder.dart';
 import 'package:medilink_app/utils/constants.dart';
 
 class UpcomingPrescriptionCard extends StatelessWidget {
   const UpcomingPrescriptionCard({super.key, required this.medication});
 
-  final Map<String, dynamic> medication;
+  final Reminder medication;
 
   @override
   Widget build(BuildContext context) {
+    Color color = getRandomColor();
     return Container(
       margin: const EdgeInsets.only(
         left: 16,
@@ -46,7 +48,7 @@ class UpcomingPrescriptionCard extends StatelessWidget {
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
-                    color: medication["theme"],
+                    color: color,
                     offset: const Offset(5, 5),
                     blurRadius: 40.0, // soften the shadow
                     spreadRadius: 0.0, //extend the shadow
@@ -58,14 +60,14 @@ class UpcomingPrescriptionCard extends StatelessWidget {
                   "assets/icons/capsule-full.png",
                 ),
                 size: 50,
-                color: medication["theme"],
+                color: color,
               ),
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  medication["pillName"],
+                  medication.name,
                   style: GoogleFonts.nunitoSans(
                     fontSize: 15,
                     fontWeight: FontWeight.w800,
@@ -75,18 +77,20 @@ class UpcomingPrescriptionCard extends StatelessWidget {
                 const SizedBox(
                   height: 6,
                 ),
-                SizedBox(
-                  width: 140,
-                  child: Text(
-                    medication["instruction"],
-                    maxLines: 3,
-                    style: const TextStyle(
-                      color: darkGreyColor,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
+                if (medication.instructions !=null && medication.instructions!.isNotEmpty) ...[
+                  SizedBox(
+                    width: 140,
+                    child: Text(
+                      "${medication.instructions}",
+                      maxLines: 3,
+                      style: const TextStyle(
+                        color: darkGreyColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                ),
+                ]
               ],
             ),
             Column(
@@ -104,7 +108,7 @@ class UpcomingPrescriptionCard extends StatelessWidget {
                       width: 6,
                     ),
                     Text(
-                      medication["dosage"],
+                      "${medication.dosage}",
                       style: const TextStyle(
                         color: typingColor,
                         fontSize: 16,
@@ -128,7 +132,7 @@ class UpcomingPrescriptionCard extends StatelessWidget {
                       width: 6,
                     ),
                     Text(
-                      medication["date"],
+                      '${medication.notificationTime.hour}:${medication.notificationTime.minute.toString().padLeft(2, '0')}',
                       style: const TextStyle(
                         color: typingColor,
                         fontSize: 16,

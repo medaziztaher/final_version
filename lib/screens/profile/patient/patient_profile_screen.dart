@@ -1,12 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:medilink_app/api/global.dart';
 import 'package:medilink_app/components/custom_app_bar.dart';
 import 'package:medilink_app/navigation/patient/patient_navigation_controller.dart';
 import 'package:medilink_app/screens/home/home_controller.dart';
+import 'package:medilink_app/screens/language/setting/language_traductaion_screen.dart';
 import 'package:medilink_app/utils/constants.dart';
 
 class PatientProfile extends StatefulWidget {
@@ -35,13 +38,13 @@ class _PatientProfileState extends State<PatientProfile> {
     HomeData controller = Get.put(HomeData());
     return SafeArea(
       child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
           horizontal: defaultScreenPadding,
           vertical: defaultScreenPadding,
         ),
         child: Column(
           children: [
-            CustomAppBar(
+            const CustomAppBar(
               title: "",
             ),
             SizedBox(
@@ -79,7 +82,7 @@ class _PatientProfileState extends State<PatientProfile> {
                     patientNavigationController.updateCurrentProfilePage(1);
                   },
                   child: ImageIcon(
-                    AssetImage("assets/icons/edit-text.png"),
+                    const AssetImage("assets/icons/edit-text.png"),
                     color: typingColor.withOpacity(0.50),
                     size: 26.sp,
                   ),
@@ -105,7 +108,7 @@ class _PatientProfileState extends State<PatientProfile> {
                       Container(
                         width: 50.w,
                         height: 50.h,
-                        padding: EdgeInsets.all(12),
+                        padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
                           color: lightBlueColor,
                           borderRadius: showPersonalInfo
@@ -117,7 +120,7 @@ class _PatientProfileState extends State<PatientProfile> {
                                   Radius.circular(12.r),
                                 ),
                         ),
-                        child: ImageIcon(
+                        child: const ImageIcon(
                           AssetImage("assets/icons/avatar.png"),
                           color: primaryColor,
                         ),
@@ -129,7 +132,7 @@ class _PatientProfileState extends State<PatientProfile> {
                         "Personal Informations",
                         style: GoogleFonts.nunitoSans(
                           color: typingColor,
-                          fontSize: 18.sp,
+                          fontSize: 17.sp,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -153,8 +156,8 @@ class _PatientProfileState extends State<PatientProfile> {
                       ),
                       child: ImageIcon(
                         showPersonalInfo
-                            ? AssetImage("assets/icons/arrow-up.png")
-                            : AssetImage("assets/icons/down.png"),
+                            ? const AssetImage("assets/icons/arrow-up.png")
+                            : const AssetImage("assets/icons/down.png"),
                         color: primaryColor,
                       ),
                     ),
@@ -189,7 +192,7 @@ class _PatientProfileState extends State<PatientProfile> {
                               Radius.circular(12.r),
                             ),
                           ),
-                          child: ImageIcon(
+                          child: const ImageIcon(
                             AssetImage("assets/icons/telephone.png"),
                             color: primaryColor,
                           ),
@@ -222,7 +225,7 @@ class _PatientProfileState extends State<PatientProfile> {
                               Radius.circular(12.r),
                             ),
                           ),
-                          child: ImageIcon(
+                          child: const ImageIcon(
                             AssetImage("assets/icons/mail_5.png"),
                             color: primaryColor,
                           ),
@@ -234,7 +237,7 @@ class _PatientProfileState extends State<PatientProfile> {
                           controller.user.email,
                           style: GoogleFonts.nunitoSans(
                             color: typingColor,
-                            fontSize: 18.sp,
+                            fontSize: 14.sp,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -255,7 +258,7 @@ class _PatientProfileState extends State<PatientProfile> {
                               Radius.circular(12.r),
                             ),
                           ),
-                          child: ImageIcon(
+                          child: const ImageIcon(
                             AssetImage("assets/icons/calendar.png"),
                             color: primaryColor,
                           ),
@@ -302,19 +305,19 @@ class _PatientProfileState extends State<PatientProfile> {
                     Container(
                       width: 50.w,
                       height: 50,
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
+                      padding: const EdgeInsets.all(12),
+                      decoration: const BoxDecoration(
                         color: lightBlueColor,
                         borderRadius: BorderRadius.all(
                           Radius.circular(12),
                         ),
                       ),
-                      child: ImageIcon(
+                      child: const ImageIcon(
                         AssetImage("assets/icons/medical-file.png"),
                         color: primaryColor,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 12,
                     ),
                     Text(
@@ -329,88 +332,99 @@ class _PatientProfileState extends State<PatientProfile> {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 12,
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 12),
               width: MediaQuery.of(context).size.width,
               height: 70.h,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.all(Radius.circular(12.r)),
               ),
-              child: Row(
-                children: [
-                  Container(
-                    width: 50,
-                    height: 50,
-                    padding: EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: lightBlueColor,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(12),
+              child: GestureDetector(
+                onTap: () => Get.to(() => const LanguageScreenSettings()),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 50,
+                      height: 50,
+                      padding: const EdgeInsets.all(12),
+                      decoration: const BoxDecoration(
+                        color: lightBlueColor,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(12),
+                        ),
+                      ),
+                      child: const ImageIcon(
+                        AssetImage("assets/icons/language.png"),
+                        color: primaryColor,
                       ),
                     ),
-                    child: ImageIcon(
-                      AssetImage("assets/icons/language.png"),
-                      color: primaryColor,
+                    const SizedBox(
+                      width: 12,
                     ),
-                  ),
-                  SizedBox(
-                    width: 12,
-                  ),
-                  Text(
-                    "Languages",
-                    style: GoogleFonts.nunitoSans(
-                      color: typingColor,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
+                    Text(
+                      "Languages",
+                      style: GoogleFonts.nunitoSans(
+                        color: typingColor,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 12,
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 12),
               width: MediaQuery.of(context).size.width,
               height: 70.h,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.all(Radius.circular(12.r)),
               ),
-              child: Row(
-                children: [
-                  Container(
-                    width: 50,
-                    height: 50,
-                    padding: EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: lightBlueColor,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(12),
+              child: GestureDetector(
+                onTap: () async {
+                  await pref.prefs?.clear();
+                  String logout = "";
+                  setGlobaldeviceToken(logout);
+                  SystemNavigator.pop();
+                },
+                child: Row(
+                  children: [
+                    Container(
+                      width: 50,
+                      height: 50,
+                      padding: const EdgeInsets.all(12),
+                      decoration: const BoxDecoration(
+                        color: lightBlueColor,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(12),
+                        ),
+                      ),
+                      child: const ImageIcon(
+                        AssetImage("assets/icons/logout.png"),
+                        color: primaryColor,
                       ),
                     ),
-                    child: ImageIcon(
-                      AssetImage("assets/icons/logout.png"),
-                      color: primaryColor,
+                    const SizedBox(
+                      width: 12,
                     ),
-                  ),
-                  SizedBox(
-                    width: 12,
-                  ),
-                  Text(
-                    "Log Out",
-                    style: GoogleFonts.nunitoSans(
-                      color: typingColor,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
+                    Text(
+                      "Log Out",
+                      style: GoogleFonts.nunitoSans(
+                        color: typingColor,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],

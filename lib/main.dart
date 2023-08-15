@@ -11,16 +11,15 @@ import 'package:medilink_app/settings/fireabse_notifications.dart';
 import 'package:medilink_app/settings/local_notifications.dart';
 import 'package:medilink_app/settings/shared_prefs.dart';
 import 'package:medilink_app/utils/constants.dart';
-import 'package:timezone/data/latest.dart' as tz;
 import 'package:uuid/uuid.dart';
-
+import 'package:timezone/data/latest.dart' as tz;
 import 'screens/home/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await FirebaseNotification().initNotification();
-  await NotificationService().initNotification();
+  NotificationService().initNotification();
   tz.initializeTimeZones();
   final pref = Pref();
   await pref.initPrefs();
@@ -85,7 +84,7 @@ class _MyAppState extends State<MyApp> {
             translations: MyLocale(),
             defaultTransition: Transition.leftToRightWithFade,
             transitionDuration: const Duration(milliseconds: 500),
-            home: hasToken ? const HomeScreen() :  const LanguageScreen(),
+            home: hasToken ? const HomeScreen() : const LanguageScreen(),
           );
         });
   }

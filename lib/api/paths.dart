@@ -1,4 +1,3 @@
-
 //url Paths :
 const url = 'https://medilink-api.onrender.com';
 //const url = 'http://10.0.2.2:5000';

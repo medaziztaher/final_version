@@ -11,12 +11,12 @@ class GetPrescController extends GetxController {
   String prescId;
   RxString userId = "".obs;
   Prescription prescription = Prescription(
-      dosage: '',
-      frequency: '',
+      dosage: 0,
+      frequency: 0,
       id: '',
       medication: '',
       patient: '',
-      startDate: DateTime.now());
+      startDate: DateTime.now(), reminder: [], type: '');
 
   RxBool isLoading = false.obs;
   NetworkHandler networkHandler = NetworkHandler();

@@ -120,12 +120,14 @@ class PatienForm extends StatelessWidget {
                         SizedBox(
                           height: 26.h,
                         ),
-                        CustomButton(
-                            buttonText: "kbutton1".tr,
-                            isLoading: controller.isLoading.value,
-                            onPress: () async {
-                              controller.completeProfile();
-                            }),
+                        Obx(() {
+                          return CustomButton(
+                              buttonText: "kbutton1".tr,
+                              isLoading: controller.isLoading.value,
+                              onPress: () async {
+                                controller.completeProfile();
+                              });
+                        }),
                       ],
                     ),
                   );

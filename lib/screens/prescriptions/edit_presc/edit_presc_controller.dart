@@ -31,12 +31,12 @@ class EditPrescriptionController extends GetxController {
   ];
   EditPrescriptionController({required this.prescription});
   Prescription prescription = Prescription(
-      dosage: '',
-      frequency: '',
+      dosage: 0,
+      frequency: 0,
       id: '',
       medication: '',
       patient: '',
-      startDate: DateTime.now());
+      startDate: DateTime.now(), reminder: [], type: '');
 
   // Getters
 

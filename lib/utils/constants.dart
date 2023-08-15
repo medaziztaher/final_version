@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 // New Color theme
 const primaryColor = Color(0xff25C9ED);
@@ -259,9 +260,6 @@ const String kForgetPassImage = "assets/images/forgot-password.png";
 const String kProfile = "assets/images/avatar.jpg";
 const String kBuilding = "assets/images/building.jpg";
 
-
-
-
 List<Map<String, dynamic>> doctors = [
   {
     "type": "Doctor",
@@ -333,7 +331,37 @@ List<Map<String, dynamic>> specialistes = [
   },
   {
     "image": "assets/icons/eye.png",
-    "name": "Optalmology",
+    "name": "Ophthalmology",
     "theme": const Color.fromARGB(203, 226, 87, 161),
   },
+  {
+    "image": "assets/icons/lungs.png",
+    "name": "Pulmonology",
+    "theme": Color.fromARGB(185, 0, 150, 136),
+  },
+  {
+    "image": "assets/icons/bone.png",
+    "name": "Orthopedics",
+    "theme": Color.fromARGB(180, 0, 170, 255),
+  },
+  {
+    "image": "assets/icons/stethoscope.png",
+    "name": "General Medicine",
+    "theme": Color.fromARGB(150, 0, 192, 87),
+  },
+  {
+    "image": "assets/icons/mental-health.png",
+    "name": "Psychiatry",
+    "theme": Color.fromARGB(180, 171, 71, 188),
+  },
 ];
+
+Color getRandomColor() {
+  Random random = Random();
+  return Color.fromARGB(
+    255, // Alpha (opacity), set to 255 for full opacity
+    random.nextInt(256), // Red
+    random.nextInt(256), // Green
+    random.nextInt(256), // Blue
+  );
+}
