@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:medilink_app/api/paths.dart';
 import 'package:medilink_app/components/custom_search_bar.dart';
 import 'package:medilink_app/components/heading_doctor_card.dart';
@@ -11,7 +12,7 @@ import 'package:medilink_app/components/metric_card.dart';
 import 'package:medilink_app/components/section_devider.dart';
 import 'package:medilink_app/components/upcoming_medication.dart';
 import 'package:medilink_app/models/health_metric.dart';
-import 'package:medilink_app/models/prescription.dart';
+import 'package:medilink_app/models/reminder.dart';
 import 'package:medilink_app/models/user.dart';
 import 'package:medilink_app/navigation/patient/patient_navigation_controller.dart';
 import 'package:medilink_app/screens/healthMetrics/health_metric_screen.dart';
@@ -19,6 +20,7 @@ import 'package:medilink_app/screens/home/home_controller.dart';
 import 'package:medilink_app/screens/user/user_screen.dart';
 import 'package:medilink_app/settings/networkhandler.dart';
 import 'package:medilink_app/settings/realtime.dart';
+import 'package:medilink_app/settings/shared_prefs.dart';
 import 'package:medilink_app/utils/constants.dart';
 
 class PatientHomeScreen extends StatefulWidget {
@@ -87,8 +89,28 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
     _setupSocketListeners();
   }
 
+  Future<List<Reminder>> getPatientReminder() async {
+    try {
+      final response = await networkHandler.get(
+        "$prescriptionUri/reminders/${Pref().prefs!.getString(kuuid)}/${DateFormat("yyyy-MM-dd").format(DateTime.now())}",
+      );
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body)['data'];
+        final List<Reminder> reminders =
+            data.map((item) => Reminder.fromJson(item)).toList();
+        return reminders;
+      } else {
+        print(
+            'API returned an error: ${json.decode(response.body)['message']}');
+        return []; // Add this line to return an empty list in case of error
+      }
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
   Future<List<User>> getPatientDoctors() async {
-    isLoading = true;
     try {
       final response = await networkHandler.get(
           "$patientUri/${homeController.user.id}/healthcare-providers/Doctor");
@@ -110,6 +132,7 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
 
   Future<void> _initializeUser() async {
     getPatientDoctors();
+    getPatientReminder();
     // getAllMetric();
   }
 
@@ -155,19 +178,40 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
               ),
               SizedBox(
                 height: 150,
-                child: ListView.builder(
-                  itemCount: upcomingPills.length,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    final item = upcomingPills[index];
-                    return Padding(
-                      padding: EdgeInsets.only(
-                        left: index == 0 ? 0 : defaultListViewItemsPadding,
-                      ),
-                      child: UpcomingMedicationCard(item: item),
-                    );
-                  },
-                ),
+                child: FutureBuilder(
+                    future: getPatientReminder(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Center(
+                          child: Text('Error: ${snapshot.error}'),
+                        );
+                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return const Center(
+                          child: Text("You don't any medication to take"),
+                        );
+                      } else {
+                        final presciptions = snapshot.data!;
+                        return ListView.builder(
+                          itemCount: presciptions.length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            final item = presciptions[index];
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                left: index == 0
+                                    ? 0
+                                    : defaultListViewItemsPadding,
+                              ),
+                              child: UpcomingMedicationCard(item: item),
+                            );
+                          },
+                        );
+                      }
+                    }),
               ),
               const SizedBox(
                 height: 26,
@@ -241,7 +285,7 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                   future: getPatientDoctors(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(
+                      return const Center(
                         child: CircularProgressIndicator(),
                       );
                     } else if (snapshot.hasError) {
@@ -253,10 +297,10 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text("You don't have doctors"),
-                            SizedBox(height: 15),
+                            const Text("You don't have doctors"),
+                            const SizedBox(height: 15),
                             ElevatedButton(
-                              child: Text('Add Doctors'),
+                              child: const Text('Add Doctors'),
                               onPressed: () {
                                 // Handle the onPressed action here
                               },
@@ -266,7 +310,6 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                       );
                     } else {
                       final users = snapshot.data!;
-
                       return ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: users.length,

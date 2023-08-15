@@ -138,10 +138,11 @@ class AddPrescriptionController extends GetxController {
                     "$prescriptionUri/${prescription.id}/set-reminder",
                     datareminder);
                 if (reminderResponse.statusCode == 200) {
-                  NotificationService().scheduleNotification(
+                  NotificationService().scheduleDailyNotifications(
                       title: "Rappel de médication",
                       body: "Reminder Set",
-                      notificationTime: reminders[i]);
+                      notificationTime: reminders[i],
+                      numberOfDays: prescription.duration!);
 
                   // Get.snackbar("Reminder", "Noti set");
                 } else {

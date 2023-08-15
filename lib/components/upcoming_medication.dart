@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:medilink_app/models/reminder.dart';
+import 'package:medilink_app/settings/shared_prefs.dart';
 import 'package:medilink_app/utils/constants.dart';
 
 class UpcomingMedicationCard extends StatefulWidget {
@@ -7,8 +9,7 @@ class UpcomingMedicationCard extends StatefulWidget {
     super.key,
     required this.item,
   });
-
-  final Map<String, dynamic> item;
+  final Reminder item;
 
   @override
   State<UpcomingMedicationCard> createState() => _UpcomingMedicationCardState();
@@ -17,6 +18,7 @@ class UpcomingMedicationCard extends StatefulWidget {
 class _UpcomingMedicationCardState extends State<UpcomingMedicationCard> {
   @override
   Widget build(BuildContext context) {
+    Color color = getRandomColor();
     return Container(
       height: 150,
       width: 180,
@@ -39,7 +41,7 @@ class _UpcomingMedicationCardState extends State<UpcomingMedicationCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.item["pillName"],
+                        widget.item.name,
                         style: GoogleFonts.nunitoSans(
                           fontSize: 15,
                           fontWeight: FontWeight.w800,
@@ -49,15 +51,18 @@ class _UpcomingMedicationCardState extends State<UpcomingMedicationCard> {
                       const SizedBox(
                         height: 6,
                       ),
-                      Text(
-                        widget.item["instruction"],
-                        maxLines: 2,
-                        style: const TextStyle(
-                          color: darkGreyColor,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
+                      if (widget.item.instructions != null &&
+                          widget.item.instructions!.isNotEmpty) ...[
+                        Text(
+                          widget.item.instructions!,
+                          maxLines: 2,
+                          style: const TextStyle(
+                            color: darkGreyColor,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
+                      ],
                     ],
                   ),
                 ),
@@ -70,7 +75,7 @@ class _UpcomingMedicationCardState extends State<UpcomingMedicationCard> {
                         decoration: BoxDecoration(
                           boxShadow: [
                             BoxShadow(
-                              color: widget.item["theme"],
+                              color: color,
                               offset: const Offset(5, 5),
                               blurRadius: 40.0, // soften the shadow
                               spreadRadius: 0.0, //extend the shadow
@@ -82,7 +87,7 @@ class _UpcomingMedicationCardState extends State<UpcomingMedicationCard> {
                             "assets/icons/capsule-full.png",
                           ),
                           size: 50,
-                          color: widget.item["theme"],
+                          color: color,
                         ),
                       ),
                     ],
@@ -105,17 +110,20 @@ class _UpcomingMedicationCardState extends State<UpcomingMedicationCard> {
                       width: 6,
                     ),
                     Text(
-                      widget.item["date"],
+                      '${widget.item.notificationTime.hour}:${widget.item.notificationTime.minute.toString().padLeft(2, '0')}',
                       style: const TextStyle(
                         color: typingColor,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
-                    )
+                    ),
                   ],
                 ),
               ],
-            )
+            ),
+            widget.item.uuid != Pref().prefs!.getString(kuuid)
+                ? const Text("Do u want to set a reminder in this device too")
+                : const SizedBox.shrink()
           ],
         ),
       ),

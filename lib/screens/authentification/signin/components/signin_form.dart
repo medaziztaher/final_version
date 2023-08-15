@@ -102,9 +102,7 @@ class SignIn extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         GestureDetector(
-          onTap: () {
-            const ForgetpasswordMailscreen();
-          },
+          onTap: ()=>Get.to(()=> const ForgetpasswordMailscreen()),
           child: Text(
             "kforgetpassword".tr,
             style: GoogleFonts.nunitoSans(

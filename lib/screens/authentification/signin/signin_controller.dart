@@ -25,7 +25,6 @@ class SignInController extends GetxController {
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
-
     super.dispose();
   }
 
@@ -48,10 +47,12 @@ class SignInController extends GetxController {
       'email': emailController.text,
       'password': passwordController.text,
     };
+    print(data);
     try {
       if (formKeySignIn.currentState!.validate()) {
         final response = await networkHandler.post(loginUri, data);
         final responseData = json.decode(response.body);
+        print(response.statusCode);
         if (response.statusCode == 200 || response.statusCode == 201) {
           final token = responseData['token'];
           pref.prefs!.setString(kTokenSave, token);

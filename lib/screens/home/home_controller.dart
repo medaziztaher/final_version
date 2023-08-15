@@ -10,7 +10,7 @@ import 'package:medilink_app/settings/realtime.dart';
 import 'package:medilink_app/settings/realtimelogic.dart';
 
 class HomeData extends GetxController {
-  late User _user = User(email: '', id: '', name: '', password: '', role: '');
+  late User user = User(email: '', id: '', name: '', password: '', role: '');
   final RxList<User> users = <User>[].obs;
   final socket = SocketClient.instance.socket!;
   final SocketMethods _socket = SocketMethods();
@@ -25,9 +25,7 @@ class HomeData extends GetxController {
   RxBool isLoading = false.obs;
   RxString errorMessage = 'No Error'.obs;
   final RxList<HealthMetric> healthMetrics = <HealthMetric>[].obs;
-
   NetworkHandler networkHandler = NetworkHandler();
-
   HomeData() {
     getHomeData();
   }
@@ -35,19 +33,18 @@ class HomeData extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    getHomeData();
     _initialize();
     _socket.connectUser();
   }
 
   void _initialize() async {
-    print(_user.role);
-    if (_user.role == 'Patient') {
-      await getHomeData();
+    print(user.role);
+    if (user.role == 'Patient') {
       await getHealthcareMetrics();
     }
   }
 
-  User get user => _user;
   List<HealthMetric> get listUserMetrics => healthMetrics;
 
   Future<void> getLastValue(String metricName) async {
@@ -72,7 +69,7 @@ class HomeData extends GetxController {
     try {
       final response = await networkHandler.get("$userUri/$userId");
       if (json.decode(response.body)['status'] == true) {
-        _user = User.fromJson(json.decode(response.body)['data']);
+        user = User.fromJson(json.decode(response.body)['data']);
         update();
       } else {
         final data = json.decode(json.decode(response.body)['status']);
@@ -88,7 +85,7 @@ class HomeData extends GetxController {
   Future<void> getHealthcareMetrics() async {
     isLoading.value = true;
     try {
-      final response = await networkHandler.get("$metricUri/${_user.id}");
+      final response = await networkHandler.get("$metricUri/${user.id}");
       if (response.statusCode == 200) {
         final data = json.decode(response.body)['data'] as List<dynamic>;
         final metrics =

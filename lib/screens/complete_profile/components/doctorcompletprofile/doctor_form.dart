@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:medilink_app/components/custom_button.dart';
 import 'package:medilink_app/models/specialite.dart';
 import 'package:medilink_app/screens/authentification/signup/components/signup_form.dart';
@@ -80,6 +81,10 @@ class DoctorForm extends StatelessWidget {
                         buildVerificationFormField(controller),
                         SizedBox(
                           height: 12.h,
+                        ),
+                        buildbirthdateField(context, controller),
+                        SizedBox(
+                          height: 26.h,
                         ),
                         builddescriptionFormField(controller),
                         SizedBox(
@@ -234,5 +239,42 @@ DropdownButtonFormField<String?> buildspecializationFormField(
       labelText: "Specialization",
       floatingLabelBehavior: FloatingLabelBehavior.always,
     ),
+  );
+}
+
+TextFormField buildbirthdateField(
+    BuildContext context, CompleteProfileController controller) {
+  return TextFormField(
+    controller: controller.dateofbirthController,
+    readOnly: true,
+    onTap: () async {
+      final DateTime? selectedDate = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(1900),
+        lastDate: DateTime(2100),
+      );
+
+      if (selectedDate != null) {
+        final DateFormat formatter = DateFormat('yyyy-MM-dd');
+        final String formattedDate = formatter.format(selectedDate);
+        controller.dateofbirthController.text = formattedDate;
+      }
+    },
+    decoration: buildInputDecoration(
+        hintText: "kbirthdate".tr,
+        prefixIconImage: "calendar.png",
+        labelText: ''),
+    style: GoogleFonts.nunitoSans(
+      fontWeight: FontWeight.w600,
+      fontSize: 16,
+      color: typingColor,
+    ),
+    validator: (value) {
+      if (value == null || value.isEmpty) {
+        return 'Please enter the date';
+      }
+      return null;
+    },
   );
 }

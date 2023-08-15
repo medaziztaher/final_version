@@ -9,6 +9,7 @@ import 'package:medilink_app/api/paths.dart';
 import 'package:medilink_app/models/options.dart';
 import 'package:medilink_app/screens/authentification/signin/signin_screen.dart';
 import 'package:medilink_app/screens/emergency_contact/add_emergency_conatct/add_emergency_contact_screen.dart';
+import 'package:medilink_app/screens/home/home_screen.dart';
 import 'package:medilink_app/settings/networkhandler.dart';
 import 'package:medilink_app/settings/shared_prefs.dart';
 
@@ -127,8 +128,7 @@ class CompleteProfileController extends GetxController {
             } else {
               print(" image path status code : ${imageResponse.statusCode}");
             }
-          } else if (globalRole == 'HealthcareProvider' &&
-              type != 'Doctor') {
+          } else if (globalRole == 'HealthcareProvider' && type != 'Doctor') {
             for (int i = 0; i < imageFiles.length; i++) {
               print(imageFiles);
               XFile? imageFile = imageFiles[i];
@@ -137,9 +137,7 @@ class CompleteProfileController extends GetxController {
                 final imageResponse = await networkHandler.patchImage(
                     buildingpicsPath, imageFile.path);
                 if (imageResponse.statusCode == 200) {
-                  Get.offAll(() => const SignInScreen());
-                  Get.snackbar("Admin Verification",
-                      "Please wait until our admin approuve your account");
+                  Get.offAll(() => const HomeScreen());
                 }
                 print(
                     " image building path status code : ${imageResponse.statusCode}");

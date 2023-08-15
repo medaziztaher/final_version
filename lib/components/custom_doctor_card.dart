@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:medilink_app/models/user.dart';
 import 'package:medilink_app/utils/constants.dart';
 
 class DoctorCard extends StatelessWidget {
@@ -10,7 +11,7 @@ class DoctorCard extends StatelessWidget {
     required this.doctor,
   });
   final int index;
-  final Map<String, dynamic> doctor;
+  final User doctor;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,7 @@ class DoctorCard extends StatelessWidget {
           ),
           height: 110.h,
           child: Padding(
-            padding: EdgeInsets.all(12.0),
+            padding: const EdgeInsets.all(12.0),
             child: Row(
               children: [
                 Container(
@@ -40,9 +41,11 @@ class DoctorCard extends StatelessWidget {
                   ),
                   height: 110.h,
                   width: 90.w,
-                  child: Image.asset(
-                    doctor["picture"],
-                  ),
+                  child: doctor.picture != null
+                      ? Image.asset(
+                          doctor.picture!,
+                        )
+                      : Image.asset(kProfile),
                 ),
                 SizedBox(
                   width: 16.w,
@@ -61,23 +64,28 @@ class DoctorCard extends StatelessWidget {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  "${doctor['firstname']} ${doctor['lastname']}",
-                                  style: GoogleFonts.nunitoSans(
-                                      fontSize: 18.sp,
-                                      fontWeight: FontWeight.w700,
-                                      color: typingColor),
-                                ),
+                                doctor.type == "Doctor"
+                                    ? Text(
+                                        "${doctor.firstname} ${doctor.lastname}",
+                                        style: GoogleFonts.nunitoSans(
+                                            fontSize: 18.sp,
+                                            fontWeight: FontWeight.w700,
+                                            color: typingColor),
+                                      )
+                                    : Text(doctor.name),
                                 SizedBox(
                                   height: 2.h,
                                 ),
-                                Text(
-                                  doctor["speciality"],
-                                  style: GoogleFonts.nunitoSans(
-                                    fontSize: 16.sp,
-                                    color: darkGreyColor,
-                                  ),
-                                ),
+                                doctor.speciality != null &&
+                                        doctor.type == 'Doctor'
+                                    ? Text(
+                                        doctor.speciality!,
+                                        style: GoogleFonts.nunitoSans(
+                                          fontSize: 16.sp,
+                                          color: darkGreyColor,
+                                        ),
+                                      )
+                                    : Text("${doctor.type}"),
                               ],
                             ),
                           ],
@@ -104,16 +112,18 @@ class DoctorCard extends StatelessWidget {
                               width: 8.w,
                             ),
                             Flexible(
-                              child: Text(
-                                doctor["address"],
-                                overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.nunitoSans(
-                                  fontSize: 15.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color:
-                                      const Color.fromARGB(232, 37, 200, 237),
-                                ),
-                              ),
+                              child: doctor.address != null
+                                  ? Text(
+                                      doctor.address!,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.nunitoSans(
+                                        fontSize: 15.sp,
+                                        fontWeight: FontWeight.w600,
+                                        color: const Color.fromARGB(
+                                            232, 37, 200, 237),
+                                      ),
+                                    )
+                                  : const SizedBox.shrink(),
                             )
                           ],
                         )

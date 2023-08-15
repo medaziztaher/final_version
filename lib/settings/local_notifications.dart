@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 class NotificationService {
@@ -58,35 +57,51 @@ class NotificationService {
         .show(id, title, body, await notificationDetails(), payload: payload);
   }
 
-  Future scheduleNotification(
-      {int id = 0,
-      String? title,
-      String? body,
-      String? payLoad,
-      required TimeOfDay notificationTime}) async {
+  Future scheduleDailyNotifications({
+    int id = 0,
+    String? title,
+    String? body,
+    String? payLoad,
+    required TimeOfDay notificationTime,
+    required int numberOfDays,
+  }) async {
     final now = tz.TZDateTime.now(tz.local);
-    print(tz.local);
-    final scheduledNotificationDateTime = tz.TZDateTime(
-      tz.local,
-      now.year,
-      now.month,
-      now.day,
-      notificationTime.hour,
-      notificationTime.minute,
-    );
-    print(now);
-    print(scheduledNotificationDateTime);
-    return notificationsPlugin.zonedSchedule(
-        id,
+    for (int i = 0; i < numberOfDays; i++) {
+      final scheduledNotificationDateTime = tz.TZDateTime(
+        tz.local,
+        now.year,
+        now.month,
+        now.day + i,
+        notificationTime.hour,
+        notificationTime.minute,
+      );
+      final localScheduledDateTime = DateTime.now().isUtc
+          ? scheduledNotificationDateTime.add(DateTime.now().timeZoneOffset)
+          : scheduledNotificationDateTime
+              .subtract(DateTime.now().timeZoneOffset);
+
+      print("tz.TZDateTime.now(tz.local) : $now");
+      print(tz.local);
+      print("localScheduledDateTimev: $localScheduledDateTime");
+
+      if (localScheduledDateTime.isBefore(now)) {
+        // Skip scheduling if the scheduled time is before the current time
+        continue;
+      }
+
+      await notificationsPlugin.zonedSchedule(
+        id + i,
         title,
         body,
         tz.TZDateTime.from(
-          scheduledNotificationDateTime,
+          localScheduledDateTime,
           tz.local,
         ),
         await notificationDetails(),
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime);
+            UILocalNotificationDateInterpretation.absoluteTime,
+      );
+    }
   }
 }

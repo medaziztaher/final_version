@@ -19,8 +19,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await FirebaseNotification().initNotification();
-  NotificationService().initNotification();
   tz.initializeTimeZones();
+  NotificationService().initNotification();
   final pref = Pref();
   await pref.initPrefs();
   runApp(const MyApp());
@@ -65,6 +65,8 @@ class _MyAppState extends State<MyApp> {
 
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+
+    
 
     return ScreenUtilInit(
         designSize: Size(screenWidth, screenHeight),
